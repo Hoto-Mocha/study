@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.onload = function() {
+            var message = document.getElementById('message');
+            // querySelector('')은 CSS의 선택기(selector)를 그대로 사용 가능.
+            // id는 #으로 시작
+            // class는 .으로 시작
+            // 속성은 []로 구분해서 사용
+            // 태그는 그냥 태그 이름으로
+            var demo = document.querySelector('#demo');
+            var clickBtn = document.querySelector('#clickBtn');
+            var resetBtn = document.querySelector('#resetBtn');
+
+            // TDD: 테스트 주도 개발
+            console.log(message, demo, resetBtn);
+
+            // 이벤트 핸들러 만들기
+            //clickBtn.onclick = function() { //클릭 버튼을 누르면 
+            //    demo.innerHTML = message.value; //demo에 message에 입력된 값을 넣는다.
+            //    message.value = ''; //demo에 입력된 값을 지운다.
+            //}
+
+            // ###의사 코드###
+            // 0. 이벤트 핸들러 만들기
+            // #clickBtn
+            // clickBtn.onclick = function(event) {}
+            clickBtn.addEventListener('click', function(event) {
+                // 1. 클릭 되는지 확인 ✔
+                // console.log('클릭 됨');
+
+                // 2. 메모 input의 데이터 가져오기 ✔
+                // console.log(message.value);
+                var messageVal = message.value;
+
+                // 3. 가져온 데이터를 텍스트로 변경 ✔
+                // console.dir(message.value);
+                // 선언 시 var 같은 키워드가 없으면 window.message 와 동일하다.
+                demo.innerHTML = messageVal;
+                
+                // 4. 초기화 - input에 있는 내용을 썼으니 input의 내용을 비워 준다. ✔
+                message.value = "";
+                message.focus(); //커서가 input으로 이동한다.
+
+                // 이렇게 기능을 말로 적는 것 - 의사 코드
+            });
+
+            resetBtn.onclick = () => { //리셋 버튼을 누르면 
+                demo.innerHTML = 'JavaScript can change HTML content.'; //demo에 JavaScript can change HTML content.를 넣는다.
+            }
+        }
+    </script>
+</head>
+<body>
+    메모 : <input type="text" id="message" value="안녕 세계">
+    <p id="demo">JavaScript can change HTML content.</p>
+
+    <!-- 인터널 적용 방식 -->
+    <button type="button" id="clickBtn">Click</button>
+    <button type="button" id="resetBtn">Reset</button>
+</body>
+</html>

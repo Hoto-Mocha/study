@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--
+        자바스크립트는 인터프리터 언어 -> 통역
+        JAVA, c언어는 컴파일 언어 -> 번역
+    -->
+    <link rel="JavaScript" href="example02.js">
+    <script>
+        //자바스크립트에서는 모든 요소가 객체이다.
+        //id값으로 태그 엘리먼트를 객체로 참조
+        var num = 100;
+        console.log(num.valueOf());
+        //이벤트 핸들러를 이용해서 모든 요소가 로드되면 실행
+        //자바스크립트 진입점
+        window.addEventListener('load', function() {}); //하나의 요소에 여러 이벤트 리스너를 집어넣을 수 있다.
+        window.onload = function() {
+            // console.dir(window.document.body);
+            var demo = document.getElementById('demo'); //document(전체)에서 id로 element를 가져오는데, id가 demo인 것을 가져와 demo라는 변수에 저장한다. 
+            var changeBtn = document.getElementById('clickBtn');
+            var resetBtn = document.getElementById('resetBtn');
+            //console.log(demo); //콘솔 -> 브라우저의 개발자 도구 안에 있는 console 탭
+            //console.log(changeBtn);
+            //console.log(resetBtn);
+            //버튼에 클릭 이벤트 핸들러를 추가해서 내용이 변경되도록 하기
+            changeBtn.onclick = function() {
+                console.log("클릭되었다.");
+                demo.innerHTML="<h2>버튼이 클릭되었다!</h2>"; //p라는 블럭 태그 안에 h2라는 블럭 태그를 넣은 것. = <p><h2></h2></p>
+                document.body.bgColor = "pink";
+            }
+            resetBtn.onclick = function() {
+                demo.innerHTML="JavaScript can change HTML content.";
+                document.body.bgColor = "";
+            }
+        }
+    </script>
+</head>
+<body>
+    
+    <p id="demo">JavaScript can change HTML content.</p>
+
+    <!-- 인터널 적용 방식 -->
+    <button type="button" id="clickBtn">Click</button>
+    <button type="button" id="resetBtn">Reset</button>
+</body>
+</html>
