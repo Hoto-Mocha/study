@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 관리 페이지</title>
+    <!-- 인터널 방식(내부 설정 방식) -->
+    <style>
+        #saveBtn {
+            width:100px; 
+            height: 30px; 
+            background-color: red; 
+            border: 0; 
+            border-radius: 6px; 
+            box-shadow: 1px 1px 2px;
+        }
+        /* css3maker.com에서 설정 후 복사 */
+        .element {
+            border: 2px solid rgba(100, 100, 100, 1);
+            border-radius: 4px;
+            background-color: rgba(247, 203, 203, 0.5);
+            box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.77);
+            text-shadow: 4px 2px 4px rgba(0, 0, 0, 0.3);
+            padding: 10px 0px;
+            text-align: center;
+        }
+        .memListTbl {
+            border: 1px solid black;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .memListTbl tr th {
+            border: 1px solid black;
+        }
+        .memListTbl td {
+            border: 1px solid black;
+            text-align: center;
+        }
+        .subTbl tr td {
+            border-left: 0 solid black;
+            border-right: 0 solid black;
+            border-top: 0 solid black;
+            border-bottom: 1 solid black;
+        }
+        .subTbl tr th {
+            border-left: 0 solid black;
+            border-right: 0 solid black;
+            border-top: 0 solid black;
+            border-bottom: 1 solid black;
+        }
+        .subTblComment {
+            width: 15%;
+            transition: 0.4s cubic-bezier(0,.64,1,.62);
+        }
+        div.container {
+            margin: auto;
+            max-width: 800px;
+            min-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <!-- 제목 -->
+             <h1 class="element">회원 관리 페이지</h1>
+        </div>
+        <div>
+            <!-- 입력 폼 -->
+             <form action="" id="memberForm">
+                <table>
+                    <tr>
+                        <th><label for="name">이름</label></th>
+                        <td><input type="text" 
+                        name="name" id="name" placeholder="성명을 입력 하세요"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="dept">부서</label></th>
+                        <td><input type="text" name="dept" id="dept" value="경영지원"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="rank">직책</label></th>
+                        <td><input type="text" name="rank" id="rank" value="과장"></td>
+                    </tr>
+                    <tr>
+                        <th>성별</th>
+                        <td>
+                            <input type="radio" name="gender" id=""> 남성
+                            <input type="radio" name="gender" id="" checked> 여성
+                            <input type="radio" name="gender" id=""> 기타
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="favorit">관심</label></th>
+                        <td>
+                            <input type="checkbox" 
+                            name="favorit" id="favorit" value="sw개발" checked> SW개발
+                            <input type="checkbox" 
+                            name="favorit" id="favorit" value="영업" checked> 영업
+                            <input type="checkbox" 
+                            name="favorit" id="favorit" value="독서"> 독서
+                            <input type="checkbox" 
+                            name="favorit" id="favorit" value="직업교육"> 직업교육
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><label for="photo">사진</label></th>
+                        <td><input type="file" name="" id="photo"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="submit" id="saveBtn" value="SAVE">
+                        </td>
+                    </tr>
+                </table>
+             </form>
+        </div>
+        <hr>
+        <div>
+            <!-- 목록 -->
+            <p>
+                검색 <input type="text"> <button>검색</button>
+            </p>
+            <table class="memListTbl" id="memListTbl">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" name="" id="">
+                        </th>
+                        <th>번호</th>
+                        <th>사진</th>
+                        <th>사원명</th>
+                        <th>부서</th>
+                        <th>직급</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                </thead>
+                <tbody id="memList">
+                    <!-- 이 부분에 새로운 사원이 추가된다. -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+                
+
+    </table>
+    <copy>(c) Comstudy school</copy>
+    </div>
+
+    <script>
+        var members = [
+            {no:"1", name:"홍길동", dept:"개발", rank:"대리"}
+        ];
+
+        var comments = [
+            [
+                {no:1, content:"멋진 사진입니다.", who:"박문수"}
+            ]
+        ];
+
+        console.log(comments);
+
+        var memberForm = document.getElementById('memberForm');
+        var saveBtn = document.getElementById('saveBtn');
+
+        var memListTbl = document.getElementById('memListTbl');
+        var memList = document.getElementById('memList');
+        
+        var listNumber = 2;
+
+        drawList();
+
+        function drawList() {
+            memList.innerHTML='';
+            members.forEach(function(memObj) {
+                memList.innerHTML +=
+                `
+                <div id="member${memObj.no}">
+                    <tr>
+                        <td rowspan="2"><input type="checkbox" name="" id=""></td>
+                        <td rowspan="2">${memObj.no}</td>
+                        <td>
+                            <!-- <img src="img/img01.png" alt="사원${memObj.no}의 사진"> -->
+                            사원 ${memObj.no}의 사진
+                        </td>
+                        <td>${memObj.name}</td>
+                        <td>${memObj.dept}</td>
+                        <td>${memObj.rank}</td>
+                        <td rowspan="2"><button>Edit</button></td>
+                        <td rowspan="2"><button>Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <table class="subTbl" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th width="50px">번호</th>
+                                        <th>댓글 내용</th>
+                                        <th>작성자</th>
+                                        <th>수정</th>
+                                        <th>삭제</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="subTblComment">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>멋진 사진입니다.</td>
+                                        <td>박문수</td>
+                                        <td><button>수정</button></td>
+                                        <td><button>삭제</button></td>
+                                    </tr>
+                                </tbody>
+                                <tr>
+                                    <td colspan="5">
+                                        댓글 : <input type="text" name="comment${memObj.no}">
+                                        작성자 : <input type="text" name="writer${memObj.no}">
+                                        <button id="doComment${memObj.no}">댓글입력</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </div>
+                `;
+
+                var doComment = document.getElementById(`doComment${memObj.no}`);
+                var comment = document.getElementById(`comment${memObj.no}`);
+                var writer = document.getElementById(`writer${memObj.no}`);
+
+                var commentNo = 2;
+
+                doComment.onclick = function(event) {
+                    console.dir(comment);
+                    console.dir(writer);
+                    //comments[memObj.no-1].push({no:commentNo, content:comment.value, who:writer.value});
+                    //console.log(comments);
+                }
+            });
+        }
+
+        saveBtn.onclick = function(event) {
+            event.preventDefault();
+            if(memberForm.name.value == '') {
+                alert('이름이 비었습니다.');
+                memberForm.name.focus();
+                return;
+            }
+            if(memberForm.dept.value == '') {
+                alert('부서가 비었습니다.');
+                memberForm.dept.focus();
+                return;
+            }
+            if(memberForm.rank.value == '') {
+                alert('직책이 비었습니다.');
+                memberForm.rank.focus();
+                return;
+            }
+
+            members.push({no:listNumber, name:memberForm.name.value , dept:memberForm.dept.value , rank:memberForm.rank.value});
+            listNumber++;
+            //모든 유효성 검사가 통과되면 전송
+            drawList();
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            border: 1px solid violet;
+            padding: 5px;
+            border-radius: 8px;
+        }
+
+        div.header {
+            overflow: hidden;
+        }
+
+        div.header.div.headerList {
+            float: left;
+        }
+
+        div.header ul {
+            margin: auto;
+            width: 600px;
+            border: 0px solid red;
+            padding: 0;
+            /* height 속성을 주지 않고 overflow 설정 */
+            overflow: hidden;
+        }
+
+        div.header li {
+            width: 120px;
+            height: 50px;
+            border: 0px solid black;
+            text-align: center;
+            list-style: none;
+            float: left;
+            box-sizing: border-box;
+            line-height: 50px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        div.header li:hover {
+            color: red;
+            border-bottom: 2px solid red;
+            font-weight: bold;
+        }
+
+        div.middle {
+            overflow: hidden;
+        }
+
+        div.footer {
+            height: 100px;
+        }
+
+        div.container {
+            width: 1000px;
+            margin: auto;
+        }
+
+        div.header h1 {
+            text-align: center;
+        }
+
+        div.header div {
+            text-align: center;
+            height: 60px;
+        }
+
+        div.middle div {
+            margin: auto;
+        }
+
+        div.middle > div {
+            float: left;
+            height: 300px;
+        }
+
+        div.middle > div:nth-child(1) {
+            width: 185px;
+        }
+
+        div.middle > div:nth-child(2) {
+            width: 580px;
+            float: left;
+        }
+        
+        div.middle > div:nth-child(2) > div {
+            border: 1px solid red;
+            width: 565px;
+            height: 135px;
+        }
+        
+        div.middle > div:nth-child(2) > div:nth-child(2) {
+            margin-top: 5px;
+        }
+
+        div.middle > div > div:nth-child(2) > div {
+            width: 270px;
+            height: 120px;
+            float: left;
+        }
+
+        div.middle > div:nth-child(3) {
+            width: 185px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hello World</h1>
+            <div>
+                <ul>
+                    <li>1번 메뉴</li>
+                    <li>2번 메뉴</li>
+                    <li>3번 메뉴</li>
+                    <li>4번 메뉴</li>
+                    <li>5번 메뉴</li>
+                </ul>
+            </div>
+        </div>
+        <div class="middle">
+            <div>
+
+            </div>
+            <div>
+                <div></div>
+                <div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <div class="footer">
+
+        </div>
+    </div>
+</body>
+</html>
