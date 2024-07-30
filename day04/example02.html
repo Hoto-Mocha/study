@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    </style>
+</head>
+<body>
+    <h1>초등학교 저학년용 계산기</h1>
+    <form action="">
+        <fieldset>
+            <legend>계산기</legend>
+            <input type="text" size="2" value="0" class="block1">
+            <select name="" id="oper">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+            </select>
+            <input type="text" size="2" value="0" class="block2">
+            <button type="button" class="resultBtn">=</button>
+            <span class="resultArea">0</span>
+        </fieldset>
+
+        <script>
+            // Dom 만들기
+            // getElementsByClassName()은 리턴형이 리스트(HTMLCollection) 형태이다.
+            var block1 = document.getElementsByClassName('block1')[0];
+            var block2 = document.querySelectorAll('.block2')[0];
+            var resultBtn = document.querySelector('.resultBtn');
+            var resultArea = document.querySelector('.resultArea');
+            var oper = document.getElementById('oper');
+
+            var result = 0;
+            // 계산기를 직접 구현해 봅니다.
+            // 초등학교 저학년 용이므로 음수가 나오지 않게 구현
+            // resultBtn.onclick = function(event) {
+            //     event.preventDefault(); //form의 기본 기능을 잠시 중단
+            //     var first = parseInt(block1.value);
+            //     var second = parseInt(block2.value);
+            //     if (oper.value == "+") {
+            //         result = first + second;
+            //     }
+            //     if (oper.value == '-') {
+            //         result = first - second;
+            //         if (result < 0) {
+            //             result = -result;
+            //         }
+            //     }
+            //     if (oper.value == '*') {
+            //         result = first * second;
+            //     }
+            //     if (oper.value == '/') {
+            //         result = first / second;
+            //     }
+            //     resultArea.textContent = result;
+            // }
+
+            resultBtn.onclick = function(event) {
+                resultArea.innerHTML = eval(parseInt(block1.value) + oper.value + parseInt(block2.value));
+            }
+        </script>
+    </form>
+</body>
+</html>
