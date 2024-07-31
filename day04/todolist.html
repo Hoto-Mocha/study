@@ -105,6 +105,12 @@
                 });
                 // 인터프리터 방식이기 때문에 
                 // 요소가 생성 된 후에 이벤트 핸들러가 만들어 져야 한다.
+
+                
+                window.localStorage.clear(); //로컬 스토리지에 문자열을 저장하기 전에 로컬 스토리지를 초기화한다.
+                window.localStorage.setItem("todoList", JSON.stringify(todoList)); //로컬 스토리지에 todoList를 JSON 문자열로 변환해서 todoList 키에 저장한다.
+                var loadTodoList = JSON.parse(window.localStorage.getItem("todoList")); //todoList라는 키로부터 JSON 문자열을 불러와서 객체로 변환한다.
+                console.log(loadTodoList); //위에서 변환한 객체를 콘솔에 출력한다.
             }
             // 함수는 호출 해야 실행 된다.
             drawList();
@@ -140,10 +146,6 @@
                 }
             }
         }
-
-        localStorage.setItem("todoList", JSON.stringify(todoList));
-        var loadTodoList = JSON.parse(localStorage.getItem("todoList"));
-        console.log(loadTodoList);
     </script>
 </head>
 <body>
