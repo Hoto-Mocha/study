@@ -57,6 +57,10 @@
             max-width: 800px;
             min-width: 600px;
         }
+
+        td.editContent, td.editWho {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -149,17 +153,8 @@
     </div>
 
     <script>
-        var members = [
-            {no:"1", name:"홍길동", dept:"개발", rank:"대리"}
-        ];
-
-        var comments = [
-            [
-                {no:1, content:"멋진 사진입니다.", who:"박문수"}
-            ]
-        ];
-
-        console.log(comments);
+        var members = []; // 속성: no, name, dept, rank
+        var comments = []; // 속성: 배열(속성: no, content, who)
 
         var memberForm = document.getElementById('memberForm');
         var saveBtn = document.getElementById('saveBtn');
@@ -167,14 +162,35 @@
         var memListTbl = document.getElementById('memListTbl');
         var memList = document.getElementById('memList');
         
-        var listNumber = 2;
+        var listNumber = 1;
 
         drawList();
 
-        function drawList() {
-            memList.innerHTML='';
+        function drawList() { //멤버창 새로고침 메서드
+            memList.innerHTML=''; //테이블의 HTML을 전부 제거(초기화)한다.
+
+            //members 배열의 각 요소를 memObj로 지정하고 반복한다.
             members.forEach(function(memObj) {
-                memList.innerHTML +=
+                // 이 부분은 댓글의 HTML 태그를 생성한다. comments의 요소 배열의 요소 하나 당 한 번 실행된다.
+                var idx = memberIndex(memObj.no);
+                var innerComment = comments[idx]; // 먼저 이 댓글창이 몇번째 멤버(memObj.no)의 댓글창인지 체크하여 comments의 몇 번째 요소 배열을 사용할 것인지 결정하고 해당 요소 배열을 innerComment에 저장한다.
+                var innerCommentHTML = ''; // 이 댓글창의 HTML을 전부 제거(초기화)한다.
+                if (innerComment) { //만약 innerComment이 존재할 경우, 즉 댓글이 하나라도 있을 경우
+                    innerComment.forEach(function(comObj) { //innerComment 배열의 각 요소를 comObj로 지정하고 반복한다.
+                        innerCommentHTML += // 댓글창의 댓글을 comObj의 속성에 따라 추가한다.
+                        `<tr>
+                            <td>${comObj.no}</td>
+                            <td class="titleContent">${comObj.content}</td>
+                            <td class="titleWho">${comObj.who}</td>
+                            <td><button onclick="editCommentBtnHandler(this, ${memObj.no}, ${comObj.no})">수정</button></td>
+                            <td><button onclick="deleteCommentBtnHandler(${memObj.no}, ${comObj.no})">삭제</button></td>
+                        </tr>
+                        `;
+                    });
+                }
+
+                // 이 부분은 멤버의 HTML태그를 생성한다. members의 요소 하나 당 한 번 실행된다.
+                memList.innerHTML += //멤버창의 멤버를 memObj의 속성에 따라 추가한다.
                 `
                 <div id="member${memObj.no}">
                     <tr>
@@ -184,11 +200,11 @@
                             <!-- <img src="img/img01.png" alt="사원${memObj.no}의 사진"> -->
                             사원 ${memObj.no}의 사진
                         </td>
-                        <td>${memObj.name}</td>
-                        <td>${memObj.dept}</td>
-                        <td>${memObj.rank}</td>
-                        <td rowspan="2"><button>Edit</button></td>
-                        <td rowspan="2"><button>Delete</button></td>
+                        <td class="memberName">${memObj.name}</td>
+                        <td class="memberDept">${memObj.dept}</td>
+                        <td class="memberRank">${memObj.rank}</td>
+                        <td rowspan="2"><button onclick="editMemberBtnHandler(this, ${memObj.no})">Edit</button></td>
+                        <td rowspan="2"><button onclick="deleteMemberBtnHandler(this, ${memObj.no})">Delete</button></td>
                     </tr>
                     <tr>
                         <td colspan="4">
@@ -202,20 +218,14 @@
                                         <th>삭제</th>
                                     </tr>
                                 </thead>
-                                <tbody class="subTblComment">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>멋진 사진입니다.</td>
-                                        <td>박문수</td>
-                                        <td><button>수정</button></td>
-                                        <td><button>삭제</button></td>
-                                    </tr>
+                                <tbody class="subTblComment" id="subTblComment${memObj.no}">
+                                    ${innerCommentHTML}
                                 </tbody>
                                 <tr>
                                     <td colspan="5">
-                                        댓글 : <input type="text" name="comment${memObj.no}">
-                                        작성자 : <input type="text" name="writer${memObj.no}">
-                                        <button id="doComment${memObj.no}">댓글입력</button>
+                                        댓글 : <input type="text" class="comment">
+                                        작성자 : <input type="text" class="writer">
+                                        <button onclick="addCommentBtnHandler(this, ${memObj.no})">댓글입력</button>
                                     </td>
                                 </tr>
                             </table>
@@ -223,19 +233,117 @@
                     </tr>
                 </div>
                 `;
+            });
+        }
 
-                var doComment = document.getElementById(`doComment${memObj.no}`);
-                var comment = document.getElementById(`comment${memObj.no}`);
-                var writer = document.getElementById(`writer${memObj.no}`);
+        function addCommentBtnHandler(btn, memNo) { // 이 부분은 댓글 추가 버튼을 눌렀을 때 작동한다.
+            var tdElement = btn.parentElement;
+            var comment = tdElement.querySelector(".comment");
+            var writer = tdElement.querySelector(".writer");
 
-                var commentNo = 2;
+            addComment(comment.value, writer.value, memNo); // 입력한 값을 배열에 추가한다.
+        }
 
-                doComment.onclick = function(event) {
-                    console.dir(comment);
-                    console.dir(writer);
-                    //comments[memObj.no-1].push({no:commentNo, content:comment.value, who:writer.value});
-                    //console.log(comments);
+        function addComment(comment, writer, memNo) {
+            var idx = memberIndex(memNo);
+            var length = comments[idx].length;
+            if(length == 0) {
+                comments[idx].push({no:1, content:comment, who:writer});
+            } else {
+                comments[idx].push({no:comments[idx][length-1].no+1, content:comment, who:writer});
+            }
+            drawList(); //멤버 목록 새로고침
+        }
+
+        function deleteCommentBtnHandler(memNo, comNo) { //이 부분은 댓글 삭제 버튼을 눌렀을 때 작동한다.
+            console.log(memNo, comNo);
+            var idx = memberIndex(memNo);
+            var comIdx = commentIndex(memNo, comNo);
+            comments[idx].splice(comIdx, 1);
+            drawList(); //멤버 목록 새로고침
+        }
+
+        function editCommentBtnHandler(btn, memNo, comNo) { // 이 부분은 댓글 수정 버튼을 눌렀을 때 작동한다.
+            var trElement = btn.parentElement.parentElement;
+            var titleContent = trElement.querySelector(".titleContent");
+            var titleWho = trElement.querySelector(".titleWho");
+            var idx = memberIndex(memNo);
+            var comIdx = commentIndex(memNo, comNo);
+            var comment = comments[idx][comIdx];
+
+            titleContent.innerHTML = `<input type="text" value="${comment.content}" class="editContent">`;
+            titleWho.innerHTML = `<input type="text" value="${comment.who}" class="editWho">`;
+
+            var editContent = trElement.querySelector(".editContent");
+            var editWho = trElement.querySelector(".editWho");
+
+            editContent.addEventListener('keyup', function(event) { //엔터키를 누르면 다음 input으로 넘어간다.
+                if(event.keyCode === 13) {
+                    editWho.focus();
                 }
+            });
+            editWho.addEventListener('keyup', function(event) { //엔터키를 누르면 댓글 배열의 멤버 인덱스의 배열의 값을 수정하고 목록을 새로고침한다.
+                if(event.keyCode === 13) {
+                    comment.content = editContent.value;
+                    comment.who = editWho.value;
+                    drawList();
+                }
+            });
+        }
+
+        function editMemberBtnHandler(btn, memNo) { // 이 부분은 멤버 수정 버튼을 눌렀을 때 작동한다. 원리는 댓글 수정 버튼을 눌렀을 때의 원리와 동일하다.
+            var trElement = btn.parentElement.parentElement;
+            var memberName = trElement.querySelector(".memberName");
+            var memberDept = trElement.querySelector(".memberDept");
+            var memberRank = trElement.querySelector(".memberRank");
+
+            var idx = memberIndex(memNo);
+
+            memberName.innerHTML = `<input type="text" value="${members[idx].name}" class="editName">`;
+            memberDept.innerHTML = `<input type="text" value="${members[idx].dept}" class="editDept">`;
+            memberRank.innerHTML = `<input type="text" value="${members[idx].rank}" class="editRank">`;
+
+            var editName = trElement.querySelector(".editName");
+            var editDept = trElement.querySelector(".editDept");
+            var editRank = trElement.querySelector(".editRank");
+
+            editName.addEventListener('keyup', function(event) { //엔터키를 누르면 다음 input으로 넘어간다.
+                if(event.keyCode === 13) {
+                    editDept.focus();
+                }
+            });
+            editDept.addEventListener('keyup', function(event) { //엔터키를 누르면 다음 input으로 넘어간다.
+                if(event.keyCode === 13) {
+                    editRank.focus();
+                }
+            });
+            editRank.addEventListener('keyup', function(event) { //엔터키를 누르면 멤버 배열의 값을 수정하고 목록을 새로고침한다.
+                if(event.keyCode === 13) {
+                    members[idx].name = editName.value;
+                    members[idx].dept = editDept.value;
+                    members[idx].rank = editRank.value;
+                    drawList();
+                }
+            });
+        }
+
+        function deleteMemberBtnHandler(btn, memNo) { // 이 부분은 멤버 삭제 버튼을 눌렀을 때 작동한다. 원리는 댓글 삭제 버튼을 눌렀을 때의 원리와 동일하다.
+            var idx = memberIndex(memNo);
+            members.splice(idx, 1);
+            comments.splice(idx, 1);
+            drawList();
+        }
+
+        function memberIndex(memNo) {
+            return members.findIndex(function(mem) {
+                return mem.no == memNo;
+            });
+        }
+
+        function commentIndex(memNo, comNo) {
+            var idx = memberIndex(memNo);
+            return comments[idx].findIndex(function(com) {
+                return com.no == comNo;
             });
         }
 
@@ -258,6 +366,7 @@
             }
 
             members.push({no:listNumber, name:memberForm.name.value , dept:memberForm.dept.value , rank:memberForm.rank.value});
+            comments.push([]);
             listNumber++;
             //모든 유효성 검사가 통과되면 전송
             drawList();
