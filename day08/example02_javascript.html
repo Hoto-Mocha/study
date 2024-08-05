@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<script>
+    // 전역 변수
+    let globalName = "홍길동";
+    var aaa = null;
+    var aaa2;
+
+    // 선언되었지만 값을 참조하지 않는 상태로 초기화
+    console.log(aaa);
+    // 변수 선언만 하고 값을 초기화하지 않으면 undifined
+    console.log(aaa2);
+    // 선언하지 않은 변수를 사용하면 not defined
+    // console.log(ccc);
+
+    function test() {
+        // let으로 선언하면 블럭단위의 scope
+        let globalName = "test함수의 지역변수";
+        // 함수 내부에서 var aaa=""로 다시 선언하면
+        // 외부에 선언한 변수에 접근하지 못함
+        // var나 function은 함수 단위의 scope이다.
+        // 자바스크립트는 인터프리터 언어: 위치 중요
+        var aaa = 'aaa2';
+        console.log(aaa);
+
+        console.log("test 함수 호출 됨 ...");
+        console.log("test에서 globalName:", globalName);
+
+        // 지역 변수
+        let localName = "아부지";
+        console.log("test에서 localName:", localName);
+
+        // 함수 내부에서 var로 선언하면 지역성을 갖지만
+        // 외부에서 window.userName 형식으로 접근 가능.
+        // var 없이 변수를 사용하면 지역성 갖지 않음.
+        //var userName = "이순신";
+        window.userName = "강감찬";
+        //var bbb = "bbb";
+        window.bbb = "bbb";
+    }
+    // 호출 하지 않은 함수는 실행 하지 않음.
+    test();
+
+    console.log("globalName:", globalName);
+    // 지역변수는 블럭 외부에서 접근 못함.
+    // let으로 선언한 변수는 지역성을 갖는다.
+    //console.log("test 외부에서 localName:" +  localName);
+    console.log("외부에서 userName:" + userName);
+
+    console.dir(window);
+    console.log(bbb);
+    console.log(aaa);
+</script>
+</body>
+</html>
