@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<p>다음에서 시스템이 만든 숫자를 선택하세요.</p>
+<p id="left"></p>
+<p id="result">결과: </p>
+<div id="buttons"></div>
+<script>
+    var left = document.querySelector('#left');
+    var result = document.querySelector('#result');
+    var buttons = document.getElementById('buttons');
+    console.log(left);
+    console.log(result);
+    var randomNumber = Math.floor(1 + Math.random()*100); //1~100의 무작위 난수 생성
+    console.log(randomNumber);
+
+    
+    var tries = 5; //최대 5번의 기회
+    var min = 1;
+    var max = 100;
+    var corrected = false;
+    function draw() {
+            buttons.innerHTML = '';
+            for (var i=min; i<=max; i++) {
+                buttons.innerHTML += `<button onclick="btnClickHandler(${i})">${i}</button>`
+            } 
+        }
+    resetGame();
+    function resetGame() {
+        tries = 5;
+        min = 1;
+        max = 100;
+        corrected = false;
+
+        left.innerHTML = `남은 기회: ${tries}`;
+        result.innerHTML = '결과: ';
+        draw();
+    }
+
+    function btnClickHandler(value) {
+        if (!corrected) {
+            // console.log(value);
+            var resultTxt = "";
+            if (value === randomNumber) {
+                corrected = true;
+                resultTxt = `결과: 정답입니다. 시스템이 만든 숫자: ${randomNumber}`;
+            } else if(value < randomNumber) {
+                resultTxt = `결과: 시스템의 숫자가 그 수보다 높습니다. 입력한 숫자: ${value}`;
+                min = value+1;
+                tries--;
+            } else {
+                resultTxt = `결과: 시스템의 숫자가 그 수보다 낮습니다. 입력한 숫자: ${value}`;
+                max = value-1;
+                tries--;
+            }
+            if (tries <= 0) {
+                resultTxt = `결과: 숫자 맞추기에 실패했습니다... 시스템이 만든 숫자: ${randomNumber}`;
+                corrected = true;
+            }
+            left.innerHTML = `남은 기회: ${tries}`;
+            result.innerHTML = resultTxt;
+            draw();
+        } else {
+            resetGame();
+        }
+    }
+</script>
+</body>
+</html>
