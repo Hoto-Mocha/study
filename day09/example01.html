@@ -4,39 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .todoDone {
+            text-decoration: line-through;
+        }
+    </style>
 </head>
 <body>
-    <h1>할 일 입력</h1>
+    <h1>Todo List</h1>
     <p>
         할일: <input type="text" class="title">
-        <button id="saveBtn">SAVE</button>
+        <button class="saveBtn">SAVE</button>
     </p>
-    <p class="resultArea">
-        결과: 
-    </p>
+    <ul class="resultArea">
+    </ul>
 
     <script>
-        // CSS 셀렉터를 이용해서 DOM 참조
-        // https://www.w3schools.com/jsref/met_element_queryselector.asp
-        // querySelectALL은 여러개를 List형태로 가져온다.
         var title = document.querySelector(".title");
-        var saveBtn = document.querySelector("#saveBtn");
-        // 확인
-        console.log(title);
-        console.dir(saveBtn);
-        // 버튼 이벤트 핸들러
-        // 익명함수로 이벤트 핸들러 만들기
-        saveBtn.onclick = function() {
-            console.log("저장 버튼 눌렀다!", title.value);
-            document.querySelector(".resultArea").innerHTML += `<p>${title.value}</p>`;
+        var saveBtn = document.querySelector(".saveBtn");
+        var resultArea = document.querySelector(".resultArea");
+
+        var todoList = [
+            {no:101, title:"todo1", done:false},
+            {no:102, title:"todo2", done:true},
+            {no:103, title:"todo3", done:false},
+            {no:104, title:"todo4", done:true}  
+        ]
+
+        function findIdx(todoList, todo) {
+            var idx = todoList.findIndex(function(t) {
+                return todo.no === t.no;
+            });
+            return idx;
         }
 
-        // 키 이벤트 사용하기
-        title.onkeydown = function(e) {
-            if(e.keyCode === 13) {
-                document.querySelector(".resultArea").innerHTML += `<p>${title.value}</p>` ;
+        function drawList() {
+            // console.log(todoList);
+            resultArea.innerHTML = '';
+            todoList.forEach(function(todo) {
+                var liTag = document.createElement("li");
+                liTag.style.listStyle = "none";
+
+                var spanTag = document.createElement("span");
+                spanTag.innerHTML = todo.title + " ";
+
+                var checkBox = document.createElement("input");
+                checkBox.setAttribute("type", "checkbox");
+
+                spanTag.removeAttribute("class");
+                if (todo.done) {
+                    checkBox.setAttribute("checked", "checked");
+                    spanTag.setAttribute("class", "todoDone");
+                }
+                
+                checkBox.addEventListener('change', function(event) {
+                    var idx = findIdx(todoList, todo);
+                    if (idx != -1) {
+                        todoList[idx].done = !todoList[idx].done;
+                        drawList();
+                    }
+                });
+
+                var delBtn = document.createElement("button");
+                delBtn.addEventListener('click', function(event) {
+                    var idx = findIdx(todoList, todo);
+                    if (idx != -1) {
+                        todoList.splice(idx, 1);
+                        drawList();
+                    }
+                });
+                delBtn.innerText = "Delete";
+
+                liTag.appendChild(checkBox);
+                liTag.appendChild(spanTag);
+                liTag.appendChild(delBtn);
+                resultArea.appendChild(liTag);
+            });
+        }
+
+        function append() {
+            if (title.value) {
+                var newNo = 101;
+                if (todoList.length > 0) {
+                    newNo = todoList[todoList.length-1].no + 1;
+                }
+                todoList.push({no:newNo, title:title.value, done:false});
+                title.value = '';
+                title.focus();
+                drawList();
             }
         }
+
+        saveBtn.addEventListener('click', function(event) {
+            append();
+        });
+
+        title.addEventListener('keyup', function(event) {
+            if(event.keyCode === 13) {
+                append();
+            }
+        });
+
+        drawList();
     </script>
 </body>
 </html>
