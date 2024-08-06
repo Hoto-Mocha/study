@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>할 일 입력</h1>
+    <p>
+        할일: <input type="text" class="title">
+        <button id="saveBtn">SAVE</button>
+    </p>
+    <ul class="resultArea">
+    </ul>
+
+    <script>
+        var saveBtn = document.querySelector("#saveBtn");
+        var title = document.querySelector(".title");
+        var listArea = document.querySelector(".resultArea");
+
+        // 할 일 삭제 기능이 가능하도록 Array를 활용한다.
+        var todoList = [
+            {no:101, title:"hello1", done:false},
+            {no:102, title:"hello2", done:false},
+            {no:103, title:"hello3", done:false},
+            {no:104, title:"hello4", done:false},
+        ]
+        function drawList() {
+            listArea.innerHTML = '';
+            todoList.forEach(function(todo) {
+                var liTag = document.createElement("li");
+                liTag.style.listStyle = "none";
+                var checkBox = document.createElement("input");
+                // checkBox.type = "checkbox";
+                checkBox.setAttribute("type", "checkbox");
+                var delBtn = document.createElement("button");
+                var spanTag = document.createElement("span");
+                spanTag.innerHTML = todo.title + " ";
+                delBtn.innerText = "Delete";
+                delBtn.addEventListener('click', function(event) {
+                    var idx = todoList.findIndex(function(t) {
+                        return t.no === todo.no;
+                    });
+                    if (idx != -1) {
+                        todoList.splice(idx, 1);
+                    }
+                    drawList();
+                });
+                // console.dir(liTag);
+                liTag.appendChild(checkBox);
+                liTag.appendChild(spanTag);
+                liTag.appendChild(delBtn);
+                listArea.appendChild(liTag);
+            });
+        }
+        drawList();
+
+        // Array에 새 할 일 추가
+        function append() {
+            var newNo = todoList[todoList.length-1].no + 1;
+            todoList.push({no:newNo, title:title.value, done:false});
+            title.value = "";
+            title.focus();
+            drawList();
+        }
+
+        saveBtn.onclick = function() {
+            append()
+        }
+
+        title.onkeydown = function(e) {
+            if(e.keyCode === 13) {
+                append();
+            }
+        }
+    </script>
+</body>
+</html>
