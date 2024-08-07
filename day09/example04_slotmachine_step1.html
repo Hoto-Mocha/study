@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>슬롯 머신 게임</title>
+
+    <style>
+        #box {
+            border: 5px solid green;
+            width: 300px;
+            height: 300px;
+        }
+        
+        .newBox {
+            display: block;
+            width: 100px;
+            height: 100px;
+            border: 1px solid red;
+            float: left;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <h1>슬롯 머신 게임</h1>
+    <div id="box"></div>
+
+    <script>
+        function Box() {
+            
+        }
+        Box.prototype = Object.create(HTMLDivElement.prototype);
+        Box.prototype.constructor = Box;
+        Box.prototype.init = function(text) {
+            const newBox = document.createElement("Box");
+            newBox.innerText = text;
+            newBox.setAttribute("class", "newBox");
+            return newBox;
+        }
+
+        const divBox = document.querySelector("#box");
+        for (var i=0; i<9; i++) {
+            const newBox = new Box().init("햄버거");
+            divBox.appendChild(newBox);
+        }
+    </script>
+</body>
+</html>

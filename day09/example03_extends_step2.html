@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        function Animal(name, sound) {
+            this.name = name;
+            this.sound = sound;
+        }
+        Animal.prototype.makeSound = function() {
+            console.log(`${this.name}이(가) ${this.sound}소리를 낸다`);
+        }
+
+        // Animal을 상속받은 Dog과 Cat을 구현해보기
+        function Dog(name, sound, size) {
+            this.name = name;
+            this.sound = sound;
+            this.size = size;
+        }
+        Dog.prototype = Object.create(Animal.prototype);
+        Dog.prototype.constructor = Dog;
+        Dog.prototype.makeSound = function() {
+            Animal.prototype.makeSound.call(this);
+            console.log(`크기는 ${this.size}.`);
+        }
+
+        function Cat(name, sound, color) {
+            this.name = name;
+            this.sound = sound;
+            this.color = color;
+        }
+        Cat.prototype = new Animal();
+        Cat.prototype.makeSound = function() {
+            Animal.prototype.makeSound.call(this);
+            console.log(`털 색은 ${this.color}이다.`);
+        }
+
+        const animals = [
+            new Dog("멍멍이1", "멍멍", "작다"),
+            new Cat("야옹이1", "야옹", "흰색"),
+            new Dog("멍멍이2", "왈왈", "크다"),
+            new Cat("야옹이2", "미야옹", "검은색"),
+            new Cat("야옹이3", "키야악", "회색"),
+        ]
+
+        animals.forEach(function(anim) {
+            anim.makeSound();
+        });
+    </script>
+</body>
+</html>

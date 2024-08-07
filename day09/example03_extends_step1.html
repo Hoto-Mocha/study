@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        // 예전 방식의 클래스 선언(function 생성자 만들기)
+        function People(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        People.prototype.display = function() {
+            console.log(this.name, this.age);
+        }
+        People.prototype.method2 = function() {
+            this.display();
+        }
+
+        const p1 = new People("홍길동", 35);
+        p1.display();
+        p1.method2();
+
+        // People을 상속받아서 다른 클래스를 선언하는 방법
+        // 예전 방식은 prototype을 이용해 상속한다.
+        function Student(name, age, grade) {
+            this.name = name;
+            this.age = age;
+            this.grade = grade;
+        }
+
+        Student.prototype = new People();
+        Student.constructor = Student;
+        Student.prototype.display = function() {
+            People.prototype.display.call(this); // 부모클래스의 프로토타입 호출(super.display()와 같음. 단 this를 꼭 넣어 주어야 한다.)
+            console.log(this.age+"세");
+            console.log(this.grade+"학년");
+        }
+
+        const p2 = new Student("학생", 14, 2);
+        p2.display();
+
+        // Es6에서 클래스 선언
+        class People2 {
+            constructor() {
+                this.name = "홍길동";
+                this.age = 35;
+            }
+
+            fn01() {
+                // 메서드 선언
+            }
+        }
+    </script>
+</body>
+</html>

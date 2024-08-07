@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #slot {
+        width: 300px;
+        height: 300px;
+        border: 5px solid black;
+    }
+    .newBox {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        display: block;
+        width: 100px;
+        height: 100px;
+        border: 1px solid red;
+        box-sizing: border-box;
+        overflow: hidden;
+        float: left;
+    }
+    .newBox ul {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        padding: 0;
+        margin: 0;
+    }
+    .newBox ul li {
+        border: 1px solid orange;
+        width: 100px;
+        height: 100px;
+        list-style: none;
+        text-align: center;
+        line-height: 100px;
+        box-sizing: border-box;
+    }
+</style>
+<body>
+    <h1>슬롯머신 게임</h1>
+    <button id="startBtn">START</button>
+    <button id="stopBtn">STOP</button>
+    <hr>
+    <div id="slot"></div>
+    <hr>
+    <p id="resultArea"></p>
+    <script>
+        const slot = document.querySelector('#slot');
+        const resultArea = document.querySelector('#resultArea');
+        var gameStarted = false;
+        function Box() { }
+        Box.prototype = Object.create(HTMLDivElement.prototype);
+        Box.prototype.constructor = Box;
+        Box.prototype.init = function() {
+            this.rolling = false;
+            this.newBox = document.createElement("Box");
+            this.elementUl = document.createElement("ul");
+            for(let i=0;i<10;i++) {
+                this.elementLi = document.createElement("li");
+                this.elementLi.innerText = (i===0?9:i);
+                this.elementUl.appendChild(this.elementLi);
+            }
+            this.newBox.appendChild(this.elementUl);
+            this.newBox.setAttribute("class", "newBox");
+            return this.newBox;
+        }
+        Box.prototype.start = function(speed) {
+            resultArea.innerText="";
+            this.rolling = true;
+            gameStarted = true;
+            clearInterval(this.interval);
+            this.elementUl.style.top = "0px";
+            this.y = 0;
+
+            this.interval = setInterval(() => {
+                this.y -= 1;
+                if (this.y <= -900) {
+                    this.y = 0;
+                }
+                this.elementUl.style.top = `${this.y}px`;
+            }, speed);
+        }
+        Box.prototype.stop = function() {
+            this.rolling = false;
+            clearInterval(this.interval);
+            console.log(Math.round((this.y / 100))*100);
+            this.elementUl.style.top = Math.round(this.y/100)*100 + "px";
+            var allStoped = true;
+            boxArr.forEach(function(b) {
+                if(b.rolling) {
+                    allStoped = false;
+                }
+            });
+            if (allStoped) {
+                printResult();
+            }
+        }
+
+        const scoreArray = [
+            [0,1,2], [3,4,5], [6,7,8],
+            [0,3,6], [1,4,7], [2,5,8],
+            [0,4,8], [2,4,6]
+        ];
+
+        function arrayIncludesAll(arr1, arr2) {
+            return arr2.every(element => arr1.includes(element));
+        }
+
+        function printResult() {
+            let score = 0;
+            let resultArray = [
+                [],[],[],
+                [],[],[],
+                [],[],[]
+            ];
+            for (let idx = 0; idx<boxArr.length; idx++) {
+                // console.log(-Math.round(boxArr[idx].y/100));
+                let resultIdx = -Math.round(boxArr[idx].y/100);
+                if(resultIdx === 9) {
+                    resultIdx = 0;
+                }
+                resultArray[resultIdx].push(idx);
+            }
+            console.log(resultArray);
+            resultArray.forEach(function(num) {
+                scoreArray.forEach(function(scoreBoard) {
+                    if (arrayIncludesAll(num, scoreBoard)) {
+                        score++;
+                    }
+                });
+            });
+            resultArea.innerText = `결과: ${score}빙고`;
+            gameStarted = false;
+        }
+
+        const boxArr = [
+            new Box(), new Box(), new Box(),
+            new Box(), new Box(), new Box(),
+            new Box(), new Box(), new Box()
+        ]
+        for(let i=0; i<boxArr.length; i++) {
+            const box = boxArr[i].init();
+            slot.appendChild(box);
+        }
+
+        const startBtn = document.querySelector("#startBtn");
+        startBtn.addEventListener('click', function(event) {
+            boxArr.forEach(function(b) {
+                b.start(1);
+            });
+        });
+
+        const stopBtn = document.querySelector("#stopBtn");
+        stopBtn.addEventListener('click', function(event) {
+            boxArr.forEach(function(b) {
+                b.stop();
+            });
+        });
+
+        const newBoxArr = document.querySelectorAll(".newBox");
+        // console.log(newBoxArr);
+        for (let idx = 0; idx < newBoxArr.length; idx++) {
+            // console.log(idx, newBoxArr[idx]);
+            newBoxArr[idx].addEventListener('click', function(event) {
+                boxArr[idx].stop();
+            });
+        }
+        
+    </script>
+</body>
+</html>
