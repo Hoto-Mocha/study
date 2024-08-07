@@ -77,7 +77,7 @@
             this.y = 0;
 
             this.interval = setInterval(() => {
-                this.y -= 1;
+                this.y -= 15;
                 if (this.y <= -900) {
                     this.y = 0;
                 }
@@ -150,7 +150,7 @@
         const startBtn = document.querySelector("#startBtn");
         startBtn.addEventListener('click', function(event) {
             boxArr.forEach(function(b) {
-                b.start(1);
+                b.start(10+Math.random()*20);
             });
         });
 
