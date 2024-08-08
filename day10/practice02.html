@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #slot {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        border: 5px solid black;
+    }
+    .newBox {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        display: block;
+        width: 100px;
+        height: 100px;
+        border: 1px solid red;
+        box-sizing: border-box;
+        overflow: hidden;
+        float: left;
+    }
+    .newBox ul {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        padding: 0;
+        margin: 0;
+    }
+    .newBox ul li {
+        border: 1px solid orange;
+        width: 100px;
+        height: 100px;
+        list-style: none;
+        text-align: center;
+        line-height: 100px;
+        box-sizing: border-box;
+    }
+    #line1, #line7, #line8 {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+    }
+    #line2 {
+        position: absolute;
+        left: 0px;
+        top: 100px;
+    }
+    #line3 {
+        position: absolute;
+        left: 0px;
+        top: 200px;
+    }
+    #line4 {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+    }
+    #line5 {
+        position: absolute;
+        left: 100px;
+        top: 0px;
+    }
+    #line6 {
+        position: absolute;
+        left: 200px;
+        top: 0px;
+    }
+    .lines {
+        display: none;
+    } 
+</style>
+<body>
+    <h1>슬롯머신 게임</h1>
+    <button id="startBtn">START</button>
+    <button id="stopBtn">STOP</button>
+    <hr>
+    <div id="slot">
+        <!-- 아래 line은 빙고 성립 시 드러나는 이미지들이다. -->
+        <div id="line1" class="lines"><img src="images/confirm1.png" alt=""></div>
+        <div id="line2" class="lines"><img src="images/confirm1.png" alt=""></div>
+        <div id="line3" class="lines"><img src="images/confirm1.png" alt=""></div>
+        <div id="line4" class="lines"><img src="images/confirm2.png" alt=""></div>
+        <div id="line5" class="lines"><img src="images/confirm2.png" alt=""></div>
+        <div id="line6" class="lines"><img src="images/confirm2.png" alt=""></div>
+        <div id="line7" class="lines"><img src="images/confirm3.png" alt=""></div>
+        <div id="line8" class="lines"><img src="images/confirm4.png" alt=""></div>
+    </div>
+    <hr>
+    <!-- 이 부분에는 결과가 출력된다. -->
+    <p id="resultArea"></p>
+    <script>
+        // DOM 생성
+        const slot = document.querySelector('#slot');
+        const resultArea = document.querySelector('#resultArea');
+
+        // 클래스 선언
+        function Box() { }
+        Box.prototype = Object.create(HTMLDivElement.prototype);
+        Box.prototype.constructor = Box;
+        Box.prototype.init = function() {
+            this.rolling = false; // 이 박스가 돌아가고 있는지를 참/거짓으로 가진다.
+            this.newBox = document.createElement("Box");
+            this.elementUl = document.createElement("ul");
+            for(let i=0;i<10;i++) {
+                this.elementLi = document.createElement("li");
+                this.elementLi.innerText = (i===0?9:i); //0은 9로 바꾼다.
+                this.elementUl.appendChild(this.elementLi);
+            }
+            this.newBox.appendChild(this.elementUl);
+            this.newBox.setAttribute("class", "newBox");
+            return this.newBox;
+        }
+        // 게임 시작 메서드
+        Box.prototype.start = function(speed) {
+            let lines = document.querySelectorAll(".lines");
+            lines.forEach(function(line) {
+                line.style.display = "none"; // 게임 시작 시 드러나 있는 라인을 모두 숨긴다.
+            })
+            resultArea.innerText=""; // 이전 게임의 결과를 지운다.
+            this.rolling = true; // 현재 박스가 돌아가고 있음을 체크
+            clearInterval(this.interval); // 인터벌을 중복으로 set하면 속도가 점점 빨라지기 때문에 초기화
+            this.elementUl.style.top = "0px";
+            this.y = 0;
+
+            this.interval = setInterval(() => {
+                this.y -= 15;
+                if (this.y <= -900) {
+                    this.y = 0;
+                }
+                this.elementUl.style.top = `${this.y}px`;
+            }, speed);
+        }
+        // 박스 멈춤 메서드
+        Box.prototype.stop = function() {
+            this.rolling = false;
+            clearInterval(this.interval);
+            console.log(Math.round((this.y / 100))*100);
+            this.elementUl.style.top = Math.round(this.y/100)*100 + "px";
+            var allStoped = true;
+            boxArr.forEach(function(b) {
+                if(b.rolling) {
+                    allStoped = false;
+                }
+            });
+            if (allStoped) {
+                printResult();
+            }
+        }
+
+        const scoreArray = [
+            [0,1,2], [3,4,5], [6,7,8],
+            [0,3,6], [1,4,7], [2,5,8],
+            [0,4,8], [2,4,6]
+        ];
+
+        function arrayIncludesAll(arr1, arr2) {
+            return arr2.every(element => arr1.includes(element));
+        }
+
+        function printResult() {
+            let score = 0;
+            let resultArray = [
+                [],[],[],
+                [],[],[],
+                [],[],[]
+            ];
+            for (let idx = 0; idx<boxArr.length; idx++) {
+                // console.log(-Math.round(boxArr[idx].y/100));
+                let resultIdx = -Math.round(boxArr[idx].y/100);
+                if(resultIdx === 9) {
+                    resultIdx = 0;
+                }
+                resultArray[resultIdx].push(idx);
+            }
+            console.log(resultArray);
+            resultArray.forEach(function(num) {
+                scoreArray.forEach(function(scoreBoard) {
+                    if (arrayIncludesAll(num, scoreBoard)) {
+                        document.querySelector(`#line${1+scoreArray.indexOf(scoreBoard)}`).style.display = "block";
+                        score++;
+                    }
+                });
+            });
+            resultArea.innerText = `결과: ${score}빙고`;
+        }
+
+        const boxArr = [
+            new Box(), new Box(), new Box(),
+            new Box(), new Box(), new Box(),
+            new Box(), new Box(), new Box()
+        ]
+        for(let i=0; i<boxArr.length; i++) {
+            const box = boxArr[i].init();
+            slot.appendChild(box);
+        }
+
+        const startBtn = document.querySelector("#startBtn");
+        startBtn.addEventListener('click', function(event) {
+            boxArr.forEach(function(b) {
+                b.start(10+Math.random()*20);
+            });
+        });
+
+        const stopBtn = document.querySelector("#stopBtn");
+        stopBtn.addEventListener('click', function(event) {
+            boxArr.forEach(function(b) {
+                b.stop();
+            });
+        });
+
+        const newBoxArr = document.querySelectorAll(".newBox");
+        for (let idx = 0; idx < newBoxArr.length; idx++) {
+            newBoxArr[idx].addEventListener('click', function(event) {
+                boxArr[idx].stop();
+            });
+        }
+        
+    </script>
+</body>
+</html>

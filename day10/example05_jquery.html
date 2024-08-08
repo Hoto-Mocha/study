@@ -1,0 +1,61 @@
+<!DOCTYPE html/>
+<html lang="en"/>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Todo List</h1>
+    제목: <input type="text" id="title" value="밥하기">
+    <button id="saveBtn">Save</button>
+    <hr/>
+    <ul id="listArea"></ul>
+
+    <script>
+        const todoList = [
+            {no: 101, title:"밥하기", done:false},
+            {no: 102, title:"빨래하기", done:false},
+            {no: 103, title:"청소하기", done:false}
+        ]
+        var cnt = 1;
+        $(function() {
+            $('#saveBtn').on('click', function() {
+                // $('body').css('background', 'yellow');
+                // innerHTML 속성 = .html();
+                // innerText 속성 = .text();
+                // value 속성 = .val();
+                // alert($('#title').val());
+
+                // input에서 읽어 온 text를 listArea에 추가
+                // jQuery append() 사용 - 문자열을 즉시 DOM으로 변경 가능.
+                if ($('#title').val()) {
+                    $('#listArea').append(`<li data-no="10${cnt++}">
+                        <input type="checkbox"/>
+                        <span>${ $('#title').val() }</span>
+                        <button class="editBtn">EDIT</button>
+                        <button class="delBtn">DELETE</button>
+                    </li>`);
+                    $('button.delBtn').bind('click', function(e) {
+                        // e.target은 DOM
+                        // $(e.target)은 jQuery 객체
+                        // console.log(e.target.parentElement);
+                        console.log( $(e.target).parent().find('span').text() );
+                        console.log( $(e.target).parent().data('no') );
+                        
+                        // .data()에 인자를 1개 쓰면 getter, 인자를 2개 쓰면 setter
+                        // console.log( $(e.target).parent().data('no', 111) );
+                    });
+                    $('#title').val('');
+                    $('#title').focus();
+                } else {
+                    alert('제목을 입력하고 SAVE하세요.')
+                    $('#title').focus();
+                    return;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

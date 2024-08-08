@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("button:nth(0)").click(function() {
+                $("p").hide(300);
+                $("body").css("background", "pink");
+            });
+            $("button:nth(1)").click(function () {
+                $("p").show(300);
+                $("body").css({
+                    background: ""
+                });
+                $("p:nth(1)")[0].innerText = "알랄레";
+                $("p:nth(2)").text("아리가또").css({
+                    color: "green",
+                    textDecoration: "line-through"
+                }).on('click', function() {
+                    alert(this.innerText);
+                    $(this).off('click');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>This is a heading</h2>
+    
+    <button>Click me to hide paragraphs</button>
+    <button>다시 보이기</button>
+    
+    <p>This is a paragraph.</p>
+    <p>This is another paragraph.</p>
+    <p>새로 추가 한 p태그</p>
+</body>
+</html>
