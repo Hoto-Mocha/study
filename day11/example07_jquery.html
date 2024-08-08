@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery 라이브러리 없이 $ 사용</title>
+    <!-- jQuery CDN 라이브러리 사용하지 않음 -->
+</head>
+<body>
+    <button id="btn">Button</button>
+
+    <script>
+        // $ 함수 선언
+        const $ = function(selector) {
+            // const domList = document.querySelectorAll(selector);
+            const dom = document.querySelector(selector);
+
+            console.log('생성된 dom >>> ', dom);
+
+            //메서드 체인이 될 기능 선언
+            dom.color = function(colorName) {
+                console.log('dom.color() 호출', colorName);
+                dom.style.color = colorName;
+                return dom;
+            };
+
+            dom.backgroundColor = function(colorName) {
+                console.log('dom.backgroundColor() 호출', colorName);
+                dom.style.backgroundColor = colorName;
+                return dom;
+            };
+
+            dom.click = function(callback) {
+                console.log('dom.click() 호출');
+                // 특정 함수 이름에 ()를 붙이는 것 = 실행
+                // 이름만 사용하면 참조
+                dom.onclick = callback;
+                return dom;
+            }
+
+            dom.posx = function(pos) {
+                dom.style.position = 'relative';
+                dom.style.left = pos + 'px';
+                return dom;
+            }
+
+            dom.posy = function(pos) {
+                dom.style.position = 'relative';
+                dom.style.top = pos + 'px';
+                return dom;
+            }
+
+            // 메서드 체인이 되도록 dom을 반환
+            return dom;
+        }
+
+        // color()가 호출되기 위해서는 $() 실행 결과가 dom객체가 되어야 한다.
+        $('#btn').color('red').click(function(event) {
+            console.log('버튼 클릭됨');
+            console.log(this === event.target);
+            this.color('blue');
+            this.backgroundColor('yellow');
+        }).posx(40).posy(200);
+    </script>
+</body>
+</html>
