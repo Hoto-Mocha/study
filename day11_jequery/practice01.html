@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        #listArea li {
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Todo List</h1>
+    <hr>
+    할 일: <input type="text" id="inputTitle">
+    <button id="saveBtn">SAVE</button>
+    <div>
+        <ul id="listArea">
+        </ul>
+    </div>
+
+    <script>
+        var todoList = [
+            {no:1, title:"밥하기", done:false},
+            {no:2, title:"밥하기", done:false},
+            {no:3, title:"밥하기", done:true},
+            {no:4, title:"밥하기", done:false},
+        ]
+
+        function drawList() {
+            $('#listArea').html('');
+            todoList.forEach(function(todo) {
+                let listElement = $('#listArea').append(`<li>
+                    <input type="checkbox">
+                    ${todo.no}. ${todo.title}
+                </li>`);
+                if (todo.done) {
+                    listElement.css({
+                    textDecoration: "line-through"
+                    });
+                }
+            });
+        }
+        drawList();
+
+        function addTodo() {
+            let titleText = $('#inputTitle').val();
+            let todo = {no:todoList[todoList.length-1].no+1, title:titleText, done:false};
+            todoList.push(todo);
+            console.log(todoList);
+            drawList();
+        }
+
+        $('#inputTitle').keydown(function(e) {
+            if (e.keyCode === 13) {
+                addTodo();
+            }
+        });
+
+        $('#saveBtn').click(function(e) {
+            addTodo();
+        })
+
+
+    </script>
+</body>
+</html>
