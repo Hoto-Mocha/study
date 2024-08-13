@@ -10,15 +10,25 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
-    <h1>Hello React Project</h1>
     <div id="root"></div>
 
     <script type="text/babel">
         // 새로운 컴포넌트 선언 - HTML 태그처럼 사용
+        const TodoList = () => {
+            return (<>
+                <h2>Todo List</h2>
+                <p><input type="text" /> 
+                <button>저장</button></p>
+            </>);
+        }
         function Hello() {
             return (<>
-                <h2>Welcome</h2>
-                <h3>오신 것을 환영합니다.</h3>
+                <h1>Hello React Project</h1>
+                {
+                    /* 이 곳은 자바스크립트 문법 */
+                    console.log("여기는 자바스크립트 공간")
+                }
+                <TodoList />
             </>);
         }
         // 자바스크립트가 아닌 바벨로 타입 지정
