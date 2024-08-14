@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Photo from "./Photo";
+import Photo from "./src/Photo";
 
 const App = () => {
     const [photoArr, setPhotoArr] = useState([
