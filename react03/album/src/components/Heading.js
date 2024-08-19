@@ -5,7 +5,7 @@ export default () => {
         <h1>Summer Holiday</h1>
         <nav><p>
             <Link to="/">Home</Link> | 
-            <Link to="/album">Albume</Link> | 
+            <Link to="/album">Album</Link> | 
             <Link to="/contact">Contact</Link> | 
             <Link to="/blogs">blogs</Link>
         </p></nav>
