@@ -51,11 +51,11 @@ app.put("/todo", (req, res)=>{
 
 // localhost:5000/todo/105
 app.delete("/todo/:no", (req, res)=>{
-    console.log("Delete /todo :", req.params.no);
+    console.log("Delete /todo :", req.body.no);
     // 할일 삭제
     // no가 같은 index 찾아서 제거
     const idx = todoList.findIndex((item) => {
-        return item.no === parseInt(req.params.no);
+        return item.no === parseInt(req.body.no);
     });
     if(idx != -1) {
         todoList.splice(idx, 1);

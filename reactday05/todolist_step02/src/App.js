@@ -24,50 +24,27 @@ const App = ()=>{
     }, []);
 
     const onClickEvent = (newTotoTitle) => {
-        // 기존 내용에 새 내용을 추가 해서 새 배열을 생성
-        //setTodoLilst([...todoList, {no:noCnt, title:inputTitle, done: false}]);
-        //setNoCnt(noCnt+1);
         axios.post(serverURL, {title: newTotoTitle}).then(function (response) {
-            setTodoLilst(response.data); // setTodoLilst(response['data']);
+            setTodoLilst(response.data);
         });
     }
 
-    const onDelete = ({no, title, done}) => {
-        // const newList = todoList.filter((todo)=> {
-        //     return todo.no != no;
-        // });
-        console.log("프론트 no: ", no);
-        axios.delete(serverURL + "/"+no).then(function (response) {
-            console.log(response.data);
-            setTodoLilst(response.data); // setTodoLilst(response['data']);
+    const onDelete = (todoItem) => {
+        axios.delete(serverURL, {data:todoItem}).then(function (response) {
+            setTodoLilst(response.data);
         });
     };
 
     const onDoneFlag = (todoItem)=>{
-        // const newTodoList = [...todoList];
-        // todoList.forEach((item, idx)=> {
-        //     if(item.no == no) {
-        //         newTodoList[idx].done = !done;
-        //     }
-        // });
-        // setTodoLilst(newTodoList);
         todoItem.done = !todoItem.done;
         axios.put(serverURL, todoItem).then(function (response) {
-            setTodoLilst(response.data); // setTodoLilst(response['data']);
+            setTodoLilst(response.data);
         });
     };
 
     const onEdit = (todoItem)=>{
-        // const newTodoList = [...todoList];
-        // todoList.forEach((item, idx)=> {
-        //     if(item.no == no) {
-        //         newTodoList[idx].done = done;
-        //         newTodoList[idx].title = title;
-        //     }
-        // });
-        // setTodoLilst(newTodoList);
         axios.put(serverURL, todoItem).then(function (response) {
-            setTodoLilst(response.data); // setTodoLilst(response['data']);
+            setTodoLilst(response.data);
         });
     };
 
