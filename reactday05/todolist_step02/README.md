@@ -7,7 +7,8 @@
 ### 미리 보기
 ![TodoList 실행 화면](./todolist-img.png)
 
-
+### 구조
+![TodoList 실행 화면](./todolist-img.png)
 
 
 
