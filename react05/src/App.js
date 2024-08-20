@@ -54,7 +54,6 @@ const App = ()=>{
             }
         });
         setTodoList(newTodoList);
-        console.log(newTodoList);
     };
 
     return (<div className="todoList">
@@ -91,9 +90,6 @@ const App = ()=>{
                 })}
                 </tbody>
             </table>
-            <ul>
-                
-            </ul>
           </div>
         </div>
     </div>);
