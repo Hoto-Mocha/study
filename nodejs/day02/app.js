@@ -20,11 +20,15 @@ const memberList = [
 ];
 let noCnt = 105;
 
+
+
 app.get("/home", (req, res) => {
     req.app.render("home/Home", {}, (err, html)=>{
         res.end(html);
     });
 });
+
+
 
 app.get("/profile", (req, res) => {
     req.app.render("profile/Profile", {}, (err, html)=>{
@@ -32,11 +36,15 @@ app.get("/profile", (req, res) => {
     });
 });
 
+
+
 app.get("/member", (req, res) => {
     req.app.render("member/Member", {}, (err, html)=>{
         res.end(html);
     });
 });
+
+
 
 app.get("/login", (req, res) => {
     req.app.render("member/Login", {}, (err, html)=>{
@@ -45,8 +53,20 @@ app.get("/login", (req, res) => {
 });
 app.post("/login", (req, res) => {
     console.log(req.body.id, req.body.password);
+    const idx = memberList.findIndex((member) => {return req.body.id === member.id});
+    if (idx != -1) {
+        if (memberList[idx].password === req.body.password) {
+            console.log('로그인 성공');
+            // 세션에 로그인 정보를 등록 후 멤버 페이지로 이동
+        } else {
+            console.log('로그인 실패');
+            // 다시 로그인 페이지로 이동
+        }
+    }
     res.redirect('/member');
 });
+
+
 
 app.get("/joinus", (req, res) => {
     // 회원 가입 ejs 페이지 foward
@@ -59,17 +79,23 @@ app.post("/joinus", (req, res) => {
     res.redirect('/member');
 });
 
+
+
 app.get("/gallery", (req, res) => {
     req.app.render("gallery/Gallery", {}, (err, html)=>{
         res.end(html);
     });
 });
 
+
+
 app.get("/shop", (req, res) => {
     req.app.render("shop/Shop", {}, (err, html)=>{
         res.end(html);
     });
 });
+
+
 
 const server = http.createServer(app);
 server.listen(app.get('port'), ()=>{
