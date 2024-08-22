@@ -9,6 +9,10 @@
     <%-include('../inc/Top.ejs') %>
     <hr />
     <div class="container">
+        <p>
+            <%=user.name %> 님 반갑습니다. (<%=user.email %>)<br/>
+            <a href="/logout">Logout</a>
+        </p>
         <h2>Member Page</h2>
         <table class="table">
             <tr>
