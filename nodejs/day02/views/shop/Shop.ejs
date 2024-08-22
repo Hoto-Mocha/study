@@ -9,7 +9,31 @@
     <%-include('../inc/Top.ejs') %>
     <hr />
     <div class="container">
-        <h2>Shop Page</h2>
+        <h2>상품 목록</h2>
+        <hr />
+        <%-include('./ShopNav.ejs') %>
+        <hr />
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>PRICE</th>
+                <th>YEAR</th>
+            </tr>
+            <%
+                carList.forEach((car) => {
+                    
+            %>
+            <tr>
+                <td><%= car._id %></td>
+                <td><a href="/shop/detail?_id=<%= car._id %>"><%= car.name %></a></td>
+                <td><%= car.price %></td>
+                <td><%= car.year %></td>
+            </tr>
+            <%
+            });
+            %>
+        </table>
     </div>
 </body>
 </html>

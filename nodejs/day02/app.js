@@ -22,6 +22,7 @@ app.use(expressSession({
     saveUninitialized:true
 }));
 
+// 임시 데이터
 const memberList = [
     {no:101, id:'user01', password:'1234', name:'홍길동', email:'hong@example.com'},
     {no:102, id:'user02', password:'2345', name:'김길동', email:'kim@example.com'},
@@ -29,6 +30,20 @@ const memberList = [
     {no:104, id:'user04', password:'4567', name:'박길동', email:'park@example.com'}
 ];
 let noCnt = 105;
+
+// 쇼핑 상품 목록
+const carList =[
+    {_id:111, name:'SM5', price:3000, year:1999, company:'SAMSUNG'},
+	{_id:112, name:'SM7', price:5000, year:2013, company:'SAMSUNG'},
+	{_id:113, name:'SONATA', price:3000, year:2023, company:'HYUNDAI'},
+	{_id:114, name:'GRANDEUR', price:4000, year:2022, company:'HYUNDAI'},
+	{_id:115, name:'BMW', price:6000, year:2019, company:'BMW'},
+	{_id:116, name:'SONATA', price:3200, year:2024, company:'HYUNDAI'}
+];
+let carSeq = 117;
+
+// 장바구니 목록
+const cart = [];
 
 // 요청 라우팅 사용
 const router = express.Router();
@@ -137,13 +152,143 @@ router.route("/gallery").get((req, res) => {
     });
 });
 
-
-
+// -------------------쇼핑몰 기능---------------------
 router.route("/shop").get((req, res) => {
-    req.app.render("shop/Shop", {}, (err, html)=>{
+    req.app.render("shop/Shop", {carList}, (err, html)=>{
+        if (err) throw err;
         res.end(html);
     });
 });
+// -----------------------CART-----------------------
+router.route("/shop/cart").get((req, res) => {
+    const _id = parseInt(req.query._id);
+    const idx = carList.findIndex((item) => {
+        return _id === item._id;
+    });
+    if (idx !== -1 && !cart.includes(carList[idx])) {
+        cart.push(carList[idx]);
+    }
+    req.app.render("shop/Cart", {cart}, (err, html)=>{
+        if (err) throw err;
+        res.end(html);
+    });
+});
+router.route("/shop/cart").post((req, res) => {
+    const _id = parseInt(req.body._id);
+    const idx = cart.findIndex((item) => {
+        return _id === item._id;
+    });
+    if (idx !== -1) {
+        cart.splice(idx, 1);
+    }
+    console.log(_id, idx, cart);
+    req.app.render("shop/Cart", {cart}, (err, html)=>{
+        if (err) throw err;
+        res.end(html);
+    });
+});
+// ----------------------DELETE----------------------
+router.route("/shop/delete").get((req, res) => {
+    const _id = parseInt(req.query._id);
+    // console.log(_id);
+    const idx = carList.findIndex((item) => {
+        return _id === item._id;
+    });
+    if (idx === -1) {
+        console.log('상품이 존재하지 않습니다.');
+        res.redirect('/shop');
+        return;
+    }
+    req.app.render("shop/Delete", {car:carList[idx]}, (err, html)=>{
+        if (err) throw err;
+        res.end(html);
+    });
+});
+router.route("/shop/delete").post((req, res) => {
+    const _id = parseInt(req.body._id);
+    const idx = carList.findIndex((item) => {
+        return _id === item._id;
+    });
+    if (idx !== -1) {
+        carList.splice(idx, 1);
+        res.redirect('/shop');
+    } else {
+        console.log('상품이 존재하지 않습니다.');
+        return;
+    }
+});
+// ----------------------DETAIL----------------------
+router.route("/shop/detail").get((req, res) => {
+    // 쿼리로 전송된 데이터는 모두 문자열이다.
+    // number() 또는 parseInt() 필수 "77" <- numeric
+    const _id = parseInt(req.query._id);
+    // console.log(_id);
+    const idx = carList.findIndex((item) => {
+        return _id === item._id;
+    });
+    if (idx === -1) {
+        console.log('상품이 존재하지 않습니다.');
+        return;
+    }
+    req.app.render("shop/Detail", {car:carList[idx]}, (err, html)=>{
+        if (err) throw err;
+        res.end(html);
+    });
+});
+// ---------------------INSERT----------------------
+router.route("/shop/insert").get((req, res) => {
+    req.app.render("shop/Insert", {carSeq: carSeq}, (err, html)=>{
+        if (err) throw err;
+        res.end(html);
+    });
+});
+router.route("/shop/insert").post((req, res) => {
+    const _id = parseInt(req.body._id);
+    const newCar = {
+        _id:_id,
+        name:req.body.name,
+        price:req.body.price,
+        year:req.body.year,
+        company:req.body.company
+    }
+    carList.push(newCar);
+    carSeq++;
+    res.redirect('/shop');
+});
+// ---------------------MODIFY----------------------
+router.route("/shop/modify").get((req, res) => {
+    const _id = parseInt(req.query._id);
+    // console.log(_id);
+    const idx = carList.findIndex((item) => {
+        return _id === item._id;
+    });
+    if (idx === -1) {
+        console.log('상품이 존재하지 않습니다.');
+        res.redirect('/shop');
+        return;
+    }
+    req.app.render("shop/Modify", {car:carList[idx]}, (err, html)=>{
+        if (err) throw err;
+        res.end(html);
+    });
+});
+router.route("/shop/modify").post((req,res)=> {
+    console.log("POST - /shop/modify 호출");
+    console.log(req.body._id);
+    const _id = parseInt(req.body._id);
+    console.dir(req.body);
+    const idx = carList.findIndex((item) => {
+        return _id === item._id;
+    });
+    if (idx !== -1) {
+        carList[idx].name = req.body.name;
+        carList[idx].price = req.body.price;
+        carList[idx].year = req.body.year;
+        carList[idx].company = req.body.company;
+    }
+    res.redirect('/shop');
+});
+// --------------------------------------------------
 
 // router 설정 맨 아래에 미들웨어를 등록한다.
 app.use('/', router);
