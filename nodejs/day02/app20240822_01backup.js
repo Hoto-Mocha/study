@@ -20,10 +20,9 @@ const memberList = [
 ];
 let noCnt = 105;
 
-// 요청 라우팅 사용
-const router = express.Router();
 
-router.route("/home").get((req, res) => {
+
+app.get("/home", (req, res) => {
     req.app.render("home/Home", {}, (err, html)=>{
         res.end(html);
     });
@@ -31,7 +30,7 @@ router.route("/home").get((req, res) => {
 
 
 
-router.route("/profile").get((req, res) => {
+app.get("/profile", (req, res) => {
     req.app.render("profile/Profile", {}, (err, html)=>{
         res.end(html);
     });
@@ -39,7 +38,7 @@ router.route("/profile").get((req, res) => {
 
 
 
-router.route("/member").get((req, res) => {
+app.get("/member", (req, res) => {
     req.app.render("member/Member", {}, (err, html)=>{
         res.end(html);
     });
@@ -47,12 +46,12 @@ router.route("/member").get((req, res) => {
 
 
 
-router.route("/login").get((req, res) => {
+app.get("/login", (req, res) => {
     req.app.render("member/Login", {}, (err, html)=>{
         res.end(html);
     });
 });
-router.route("/login").post((req, res) => {
+app.post("/login", (req, res) => {
     console.log(req.body.id, req.body.password);
     const idx = memberList.findIndex((member) => {return req.body.id === member.id});
     if (idx != -1) {
@@ -69,20 +68,20 @@ router.route("/login").post((req, res) => {
 
 
 
-router.route("/joinus").get((req, res) => {
+app.get("/joinus", (req, res) => {
     // 회원 가입 ejs 페이지 foward
     req.app.render("member/Joinus", {}, (err, html)=>{
         res.end(html);
     });
 });
-router.route("/joinus").post((req, res) => {
+app.post("/joinus", (req, res) => {
     // 회원 가입 처리 후 목록으로 리다이렉트
     res.redirect('/member');
 });
 
 
 
-router.route("/gallery").get((req, res) => {
+app.get("/gallery", (req, res) => {
     req.app.render("gallery/Gallery", {}, (err, html)=>{
         res.end(html);
     });
@@ -90,16 +89,14 @@ router.route("/gallery").get((req, res) => {
 
 
 
-router.route("/shop").get((req, res) => {
+app.get("/shop", (req, res) => {
     req.app.render("shop/Shop", {}, (err, html)=>{
         res.end(html);
     });
 });
 
-// router 설정 맨 아래에 미들웨어를 등록한다.
-app.use('/', router);
 
-// 서버 설정 및 실행
+
 const server = http.createServer(app);
 server.listen(app.get('port'), ()=>{
     console.log(`Run on server >>> http://localhost:${app.get('port')}`);
