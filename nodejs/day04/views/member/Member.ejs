@@ -9,21 +9,21 @@
     <%-include('../inc/Top.ejs') %>
     <hr />
     <div class="container">
-        <h2>Member</h2>
         <p>
-            <%= user.name %>님 반갑습니다 (<%= user.email %>)<br/>
+            <%=user.name %> 님 반갑습니다. (<%=user.email %>)<br/>
             <a href="/logout">Logout</a>
         </p>
+        <h2>Member Page</h2>
         <table class="table">
             <tr>
-                <th>NO</th>
-                <th>NAME</th>
-                <th>EMAIL</th>
+                <th>No</th>
+                <th>Name</th>
+                <th>Email</th>
             </tr>
             <tr>
                 <td>1</td>
                 <td>홍길동</td>
-                <td>hong@gmail.com</td>
+                <td>hong@example.com</td>
             </tr>
         </table>
     </div>

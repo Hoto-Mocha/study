@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Shop</title>
 </head>
 <body>
     <%-include('../inc/Top.ejs') %>
     <hr />
     <div class="container">
         <h2>상품 목록</h2>
-        <hr />
-        <%-include('./ShopNav.ejs') %>
-        <hr />
         <table class="table">
             <tr>
                 <th>ID</th>
@@ -20,20 +17,21 @@
                 <th>PRICE</th>
                 <th>YEAR</th>
             </tr>
-            <%
-                carList.forEach((car) => {
-                    
-            %>
+        <%
+            carList.forEach((car)=>{
+        %>
             <tr>
-                <td><%= car._id %></td>
-                <td><a href="/shop/detail?_id=<%= car._id %>"><%= car.name %></a></td>
-                <td><%= car.price %></td>
-                <td><%= car.year %></td>
+                <td><%=car._id %></td>
+                <td><a href="/shop/detail?_id=<%=car._id %>"><%=car.name %></a></td>
+                <td><%=car.price %></td>
+                <td><%=car.year %></td>
             </tr>
-            <%
-            });
-            %>
+        <%
+            })
+        %>
         </table>
+        <hr/>
+        <%-include('./ShopNav.ejs') %>
     </div>
 </body>
 </html>

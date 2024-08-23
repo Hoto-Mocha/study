@@ -3,43 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop</title>
+    <title>Document</title>
 </head>
 <body>
     <%-include('../inc/Top.ejs') %>
     <hr />
     <div class="container">
         <h2>새 상품 추가</h2>
+        <hr />
         <form action="/shop/insert" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_id" value="<%=carSeq %>">
             <table class="table">
                 <tr>
+                    <th>ID</th>
+                    <td><%=carSeq %></td>
+                </tr>
+                <tr>
                     <th>NAME</th>
-                    <td><input type="text" name="name" value="타이칸"></td>
+                    <td><input type="text" name="name" value=""> </td>
                 </tr>
                 <tr>
                     <th>PRICE</th>
-                    <td><input type="text" name="price" value="12000"></td>
+                    <td><input type="text" name="price" value=""></td>
                 </tr>
                 <tr>
                     <th>YEAR</th>
-                    <td><input type="text" name="year" value="2022"></td>
+                    <td><input type="text" name="year" value=""></td>
                 </tr>
                 <tr>
                     <th>COMPANY</th>
-                    <td><input type="text" name="company" value="포르쉐"></td>
+                    <td><input type="text" name="company" value=""></td>
                 </tr>
                 <tr>
                     <th>PHOTO</th>
-                    <td><input multiple type="file" name="photo"></td>
+                    <td><input type="file" name="photo" multiple></td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        사진 미리보기
+                        PREVIEW
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input type="submit" value="저장">
+                        <input type="submit" value="상품 추가">
                     </td>
                 </tr>
             </table>
