@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>멤버 목록</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>PW</th>
+            <th>NAME</th>
+            <th>AGE</th>
+        </tr>
+        <%
+            memberList.forEach((member, idx) => {
+        %>
+        <tr>
+            <td><%=member.id%></td>
+            <td><%=member.password%></td>
+            <td><%=member.name%></td>
+            <td><%=member.age%></td>
+        </tr>
+        <%
+            });
+        %>
+    </table>
+    <h1>
+        당신은...
+    </h1>
+    <p>이름: <%=user.name%></p>
+    <p>나이: <%=user.age%></p>
+</body>
+</html>
