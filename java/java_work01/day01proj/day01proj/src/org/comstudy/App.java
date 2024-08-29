@@ -1,5 +1,7 @@
 package org.comstudy;
 
+import java.util.Scanner;
+
 public class App {
     public static void main(String[] args) throws Exception {
         // 변수명 초기화는 변수를 선언할 때 초기 값을 넣어 주는 것.
@@ -14,6 +16,14 @@ public class App {
         // String은 문자열을 다루는 타입으로 기본형처럼 쓰이는 참조형(클래스)
         String greeting = "Hello, World!";
 
+        Scanner scan = new Scanner(System.in);
+
+        System.out.print("이름 입력: ");
+        String name = scan.next();
+
+        scan.close();
+        
         System.out.println(greeting);
+        System.out.println(name);
     }
 }
